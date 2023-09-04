@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="navbar">
+    <ng-container *ngTemplateOutlet="ul; context: {menuList: menuList}"></ng-container>
+    <ng-template #ul let-menuList="menuList">
+      <ng-container *ngFor="let menu of menuList">
+        <div class="menu-item" [class.isActive]="menu.isActive"
+             [class.hasActiveChild]="menu.hasActiveChild && !menu.isOpened">
+          <a *ngIf="!menu.menuList" [href]="menu.path">
+            <p [style.padding-left]="menu.level + 'rem'">
+              <span [style.opacity]="0" class="material-symbols-rounded">expand_less</span>
+              {{menu.label}}
+            </p>
+          </a>
+          <ng-container *ngIf="menu.menuList">
+            <p [style.padding-left]="menu.level + 'rem'" (click)="toggleMenu(menu, menuList)">
+              <span *ngIf="menu.isOpened" class="material-symbols-rounded">expand_less</span>
+              <span *ngIf="!menu.isOpened" class="material-symbols-rounded">expand_more</span>
+              {{menu.label}}
+            </p>
+            <div class="menu-list" [style.height]="menu.isOpened ? 'unset' : '0'">
+              <ng-container *ngTemplateOutlet="ul; context: {menuList: menu.menuList}"></ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </ng-template>
+  </div>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+</div>
